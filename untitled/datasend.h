@@ -7,6 +7,9 @@
 #include "mqttclient.h"
 #include "mymodbus.h"
 
+#include <QMutex>
+#include <QMutexLocker>
+
 class DataSender : public QObject
 {
     Q_OBJECT
@@ -14,8 +17,10 @@ public:
     DataSender(QObject *parent = nullptr,MyModbus *modbus = nullptr,mqtt_client_t *client = nullptr, const char *topic = nullptr);
     ~DataSender();
     void setParameters(double wendu, double shidu);
-protected:
 
+    QString imageUrl;
+
+protected:
     // 创建 JSON 对象并填充数据
     QJsonObject createJsonObject(double temperature, double humidity);
     // 将 QJsonObject 转换为 JSON 字符串
@@ -27,8 +32,11 @@ private:
     double temp;
     double hum;
 
+    QMutex m_mutex; // 添加互斥锁
+
 public slots:
     void mqttPublishJson();
+    void publisuImage(QString imageurl);
 };
 
 

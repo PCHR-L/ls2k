@@ -8,81 +8,105 @@
 #include <QDebug>
 #include "mainwindow.h"
 #include <QtCharts/QDateTimeAxis>
-#include <control.h>
+#include <QFont>
 
 
 MyModbus::MyModbus(QWidget *parent) :QWidget(parent)
 {
-    QPushButton *btnDevice1_open = new QPushButton("开",this);
-    QPushButton *btnDevice1_close = new QPushButton("关",this);
-    QPushButton *btnDevice2_open = new QPushButton("开",this);
-    QPushButton *btnDevice2_close = new QPushButton("关",this);
-    QPushButton *btnDevice3_open = new QPushButton("开",this);
-    QPushButton *btnDevice3_close = new QPushButton("关",this);
-    QPushButton *btnDevice4_open = new QPushButton("开",this);
-    QPushButton *btnDevice4_close = new QPushButton("关",this);
-
-    QLabel *deviceQLabel1 = new QLabel("设备1:",this);
-    QLabel *deviceQLabel2 = new QLabel("设备2:",this);
-    QLabel *deviceQLabel3 = new QLabel("设备3:",this);
-    QLabel *deviceQLabel4 = new QLabel("设备4:",this);
-
-    QVBoxLayout *deviceLayout1 = new QVBoxLayout(this);
-    deviceLayout1->addWidget(deviceQLabel1);
-    deviceLayout1->addWidget(btnDevice1_open);
-    deviceLayout1->addWidget(btnDevice1_close);
-
-    QVBoxLayout *deviceLayout2 = new QVBoxLayout(this);
-    deviceLayout2->addWidget(deviceQLabel2);
-    deviceLayout2->addWidget(btnDevice2_open);
-    deviceLayout2->addWidget(btnDevice2_close);
-
-    QVBoxLayout *deviceLayout3 = new QVBoxLayout(this);
-    deviceLayout3->addWidget(deviceQLabel3);
-    deviceLayout3->addWidget(btnDevice3_open);
-    deviceLayout3->addWidget(btnDevice3_close);
-
-
-    QVBoxLayout *deviceLayout4 = new QVBoxLayout(this);
-    deviceLayout4->addWidget(deviceQLabel4);
-    deviceLayout4->addWidget(btnDevice4_open);
-    deviceLayout4->addWidget(btnDevice4_close);
-
     btnRead = new QPushButton("读取一次",this);
-    pushButton = new QPushButton("读取",this);
+    btnRead->setStyleSheet("font-size: 18px;");
+    btnRead->resize(100,50);
+    pushButton = new QPushButton("开始读取",this);
+    pushButton->setStyleSheet("font-size: 18px;");
+    pushButton->resize(100,50);
     pushButton_stop = new QPushButton("停止读取",this);
-    btnRead->resize(180,60);
-    pushButton->resize(180,60);
-    pushButton_stop->resize(180,60);
-    QVBoxLayout *gLayout = new QVBoxLayout(this);
-    gLayout->addWidget(btnRead);
-    gLayout->addWidget(pushButton);
-    gLayout->addWidget(pushButton_stop);
+    pushButton_stop->setStyleSheet("font-size: 18px;");
+    pushButton_stop->resize(100,50);
 
     btnToset = new QPushButton("设置报警阈值",this);
+    btnToset->setStyleSheet("font-size: 18px;");
+    btnToset->resize(100,50);
     btnToSecond = new QPushButton("视频监控",this);
-    btnToset->resize(180,60);
-    btnToSecond->resize(180,60);
-    QVBoxLayout *fLayout = new QVBoxLayout(this);
-    fLayout->addWidget(btnToset);
-    fLayout->addWidget(btnToSecond);
+    btnToSecond->setStyleSheet("font-size: 18px;");
+    btnToSecond->resize(100,50);
+    btnToCan = new QPushButton("Can设备");
+    btnToCan->setStyleSheet("font-size: 18px;");
+    btnToCan->resize(100,50);
 
-    tempLineEdit = new QLineEdit(this);
-    humLineEdit = new QLineEdit(this);
-    temp = new QLabel("温度：",this);
-    hum = new QLabel("湿度：",this);
+    QLabel  *d1 = new QLabel("设备1:");
+    d1->setStyleSheet("font-size: 24px;");
+    QLabel  *d2 = new QLabel("设备2:");
+    d2->setStyleSheet("font-size: 24px;");
+    QLabel  *d3 = new QLabel("设备3:");
+    d3->setStyleSheet("font-size: 24px;");
+    QLabel  *d4 = new QLabel("设备4:");
+    d4->setStyleSheet("font-size: 24px;");
+    QLabel  *d5 = new QLabel("设备5:");
+    d5->setStyleSheet("font-size: 24px;");
+    QLabel  *d6 = new QLabel("设备6:");
+    d6->setStyleSheet("font-size: 24px;");
+    QLabel  *d7 = new QLabel("设备7:");
+    d7->setStyleSheet("font-size: 24px;");
+    QLabel  *d8 = new QLabel("设备8:");
+    d8->setStyleSheet("font-size: 24px;");
+    switchButton1 = new CustomSwitch(this);
+    switchButton2 = new CustomSwitch(this);
+    switchButton3 = new CustomSwitch(this);
+    switchButton4 = new CustomSwitch(this);
+    switchButton5 = new CustomSwitch(this);
+    switchButton6 = new CustomSwitch(this);
+    switchButton7 = new CustomSwitch(this);
+    switchButton8 = new CustomSwitch(this);
 
+    QHBoxLayout *l1 = new QHBoxLayout;
+    l1->addWidget(d1);
+    l1->addWidget(switchButton1);
+    QHBoxLayout *l2 = new QHBoxLayout;
+    l2->addWidget(d2);
+    l2->addWidget(switchButton2);
+    QHBoxLayout *l3 = new QHBoxLayout;
+    l3->addWidget(d3);
+    l3->addWidget(switchButton3);
+    QHBoxLayout *l4 = new QHBoxLayout;
+    l4->addWidget(d4);
+    l4->addWidget(switchButton4);
+    QHBoxLayout *l5 = new QHBoxLayout;
+    l5->addWidget(d5);
+    l5->addWidget(switchButton5);
+    QHBoxLayout *l6 = new QHBoxLayout;
+    l6->addWidget(d6);
+    l6->addWidget(switchButton6);
+    QHBoxLayout *l7 = new QHBoxLayout;
+    l7->addWidget(d7);
+    l7->addWidget(switchButton7);
+    QHBoxLayout *l8 = new QHBoxLayout;
+    l8->addWidget(d8);
+    l8->addWidget(switchButton8);
+
+    temp = new QLabel("温度: --°C",this);
+    temp->setStyleSheet("font-size: 32px;");
+    temp->resize(100,50);
+    hum = new QLabel("湿度: --%",this);
+    hum->setStyleSheet("font-size: 32px;");
+    hum->resize(100,50);
     m_axisX = new QDateTimeAxis();
     m_axisY = new QValueAxis();
+
     m_axisX->setFormat("HH:mm:ss"); // 设置x轴的日期时间格式
     m_axisX->setTitleText("时间");
     m_axisY->setRange(-10, AXIS_MAX_Y); // 确保使用setRange
+    QFont axisFont;
+    axisFont.setPointSize(12); // 设置为12点
+    m_axisY->setLabelsFont(axisFont);
+    m_axisX->setLabelsFont(axisFont);
+
     temp_lineSeries = new QLineSeries();               //曲线对象
     hum_lineSeries = new QLineSeries();
     temp_lineSeries->setPointsVisible(true);           //设置数据点可见
     temp_lineSeries->setName("温度");
     hum_lineSeries->setPointsVisible(true);           //设置数据点可见
     hum_lineSeries->setName("湿度");
+
     m_chart = new QChart();
     m_chart->resize(400,400);
     m_chart->addAxis(m_axisY, Qt::AlignLeft);       //加入坐标轴
@@ -95,24 +119,30 @@ MyModbus::MyModbus(QWidget *parent) :QWidget(parent)
     hum_lineSeries->attachAxis(m_axisX);              //曲线对象关联上坐标轴，此步骤必须在m_chart->addSeries之后
     hum_lineSeries->attachAxis(m_axisY);
     QChartView *chartView = new QChartView(m_chart);
+    chartView->setStyleSheet("border: 1px solid black;");
 
-    QHBoxLayout *tempLayout = new QHBoxLayout;
-    tempLayout->addWidget(temp);
-    tempLayout->addWidget(tempLineEdit);
-    QHBoxLayout *humLayout = new QHBoxLayout;
-    humLayout->addWidget(hum);
-    humLayout->addWidget(humLineEdit);
+    QLabel *title = new QLabel("控制设备(红色关，绿色开):");
+    title->setStyleSheet("font-size: 24px;");
 
-    QGridLayout *gridLayout = new QGridLayout(this);
-    gridLayout->addLayout(deviceLayout1,0,0);
-    gridLayout->addLayout(deviceLayout2,0,1);
-    gridLayout->addLayout(deviceLayout3,0,2);
-    gridLayout->addLayout(deviceLayout4,0,3);
-    gridLayout->addWidget(chartView, 1, 0, 2, 3);
-    gridLayout->addLayout(gLayout,2,0);
-    gridLayout->addLayout(fLayout,3,0);
-
-
+    gridLayout = new QGridLayout(this);
+    gridLayout->addWidget(title,5,3,1,8);
+    gridLayout->addLayout(l1,1,5);
+    gridLayout->addLayout(l2,1,6);
+    gridLayout->addLayout(l3,1,7);
+    gridLayout->addLayout(l4,1,8);
+    gridLayout->addLayout(l5,2,5);
+    gridLayout->addLayout(l6,2,6);
+    gridLayout->addLayout(l7,2,7);
+    gridLayout->addLayout(l8,2,8);
+    gridLayout->addWidget(chartView, 0, 0, 4, 5);
+    gridLayout->addWidget(temp,3,5,1,2);
+    gridLayout->addWidget(hum,3,6,1,2);
+    gridLayout->addWidget(btnRead,4,4);
+    gridLayout->addWidget(pushButton, 4,5);      // 开始按钮
+    gridLayout->addWidget(pushButton_stop, 4, 6); // 停止按钮
+    gridLayout->addWidget(btnToset,5,0);
+    gridLayout->addWidget(btnToSecond,5,4);
+    gridLayout->addWidget(btnToCan,5,8);
     setLayout(gridLayout);
 
     m_timer = new QTimer(this);
@@ -149,16 +179,16 @@ MyModbus::MyModbus(QWidget *parent) :QWidget(parent)
     connect(pushButton,&QPushButton::clicked,this,&MyModbus::on_pushButton_clicked);
     connect(pushButton_stop,&QPushButton::clicked,this,&MyModbus::on_pushButton_stop_clicked);
     connect(btnToset,&QPushButton::clicked,this,&MyModbus::on_btnToSet_clicked);
+    connect(btnToCan,&QPushButton::clicked,this,&MyModbus::on_btnToCan_clicked);
 
-    connect(btnDevice1_open,&QPushButton::clicked,this,&MyModbus::on_btnControlDevice1_open);
-    connect(btnDevice1_close,&QPushButton::clicked,this,&MyModbus::on_btnControlDevice1_close);
-    connect(btnDevice2_open,&QPushButton::clicked,this,&MyModbus::on_btnControlDevice2_open);
-    connect(btnDevice2_close,&QPushButton::clicked,this,&MyModbus::on_btnControlDevice2_close);
-    connect(btnDevice3_open,&QPushButton::clicked,this,&MyModbus::on_btnControlDevice3_open);
-    connect(btnDevice3_close,&QPushButton::clicked,this,&MyModbus::on_btnControlDevice3_close);
-    connect(btnDevice4_open,&QPushButton::clicked,this,&MyModbus::on_btnControlDevice4_open);
-    connect(btnDevice4_close,&QPushButton::clicked,this,&MyModbus::on_btnControlDevice4_close);
-
+    connect(switchButton1,&CustomSwitch::turn,this,&MyModbus::on_switch1);
+    connect(switchButton2,&CustomSwitch::turn,this,&MyModbus::on_switch2);
+    connect(switchButton3,&CustomSwitch::turn,this,&MyModbus::on_switch3);
+    connect(switchButton4,&CustomSwitch::turn,this,&MyModbus::on_switch4);
+    connect(switchButton5,&CustomSwitch::turn,this,&MyModbus::on_switch5);
+    connect(switchButton6,&CustomSwitch::turn,this,&MyModbus::on_switch6);
+    connect(switchButton7,&CustomSwitch::turn,this,&MyModbus::on_switch7);
+    connect(switchButton8,&CustomSwitch::turn,this,&MyModbus::on_switch8);
 }
 
 MyModbus::~MyModbus()
@@ -172,6 +202,7 @@ MyModbus::~MyModbus()
 
 void MyModbus::readyRead()
 {
+    QMutexLocker locker(&m_mutex); // 使用互斥锁保护临界区
     //QModbusReply这个类存储了来自client的数据,sender()返回发送信号的对象的指针
     auto reply = qobject_cast<QModbusReply*>(sender());
     if(reply == nullptr){
@@ -193,8 +224,8 @@ void MyModbus::readyRead()
 
         temperature_str = QString("%1").arg(temperature);      //把任何类型数据转换为字符串
         humidity_str = QString::number(humidity,'g',4);     //把任何类型数据转换为字符串
-        tempLineEdit->setText(temperature_str);
-        humLineEdit->setText(humidity_str);
+        temp->setText(QString("温度: %1°C").arg(temperature));
+        hum->setText(QString("湿度: %1%").arg(humidity));
 
         emit temperatureHumidityUpdated(temperature,humidity);
 
@@ -235,7 +266,7 @@ void MyModbus::readyRead()
 void MyModbus::on_btnRead_clicked()
 {
     QModbusDataUnit data(QModbusDataUnit::InputRegisters,0x0000,2);         //准备Qt的modbus指令数据单元
-    // 0x0001是要读取数据的起始寄存器起始地址（不是modbus设备地址）
+    // 0x0000是要读取数据的起始寄存器起始地址（不是modbus设备地址）
     //2表示读取2个寄存器里面的数据
     //如果DataUnit中，要读取的起始寄存器设置不正确，运行时会输出“读取数据协议错误iu“Modbus Exception Response.””
     QModbusReply *reply = modbusManager->sendReadRequest(data, 0x01);     //参数0x0001为modbus设备地址，无需功能码，Qt已经自动处理4
@@ -246,6 +277,89 @@ void MyModbus::on_btnRead_clicked()
     if(!reply->isFinished()){
         connect(reply,&QModbusReply::finished,this,&MyModbus::readyRead);
     }
+}
+
+void MyModbus::on_switch1(bool checked)
+{
+    int v = checked;
+
+    QModbusDataUnit dataUnit(QModbusDataUnit::HoldingRegisters, 0x0000, 1);
+    QVector<quint16> values;
+    values.append(v);
+    dataUnit.setValues(values);
+    modbusManager->sendWriteRequest(dataUnit, 0x02);
+
+}
+void MyModbus::on_switch2(bool checked)
+{
+    int v = checked;
+
+    QModbusDataUnit dataUnit(QModbusDataUnit::HoldingRegisters, 0x0001, 1);
+    QVector<quint16> values;
+    values.append(v);
+    dataUnit.setValues(values);
+    modbusManager->sendWriteRequest(dataUnit, 0x02);
+
+}
+void MyModbus::on_switch3(bool checked)
+{
+    int v = checked;
+
+    QModbusDataUnit dataUnit(QModbusDataUnit::HoldingRegisters, 0x0002, 1);
+    QVector<quint16> values;
+    values.append(v);
+    dataUnit.setValues(values);
+    modbusManager->sendWriteRequest(dataUnit, 0x02);
+
+}
+void MyModbus::on_switch4(bool checked)
+{
+    int v = checked;
+
+    QModbusDataUnit dataUnit(QModbusDataUnit::HoldingRegisters, 0x0003, 1);
+    QVector<quint16> values;
+    values.append(v);
+    dataUnit.setValues(values);
+    modbusManager->sendWriteRequest(dataUnit, 0x02);
+
+}
+void MyModbus::on_switch5(bool checked)
+{
+    int v = checked;
+    QModbusDataUnit dataUnit(QModbusDataUnit::HoldingRegisters, 0x0004, 1);
+    QVector<quint16> values;
+    values.append(v);
+    dataUnit.setValues(values);
+    modbusManager->sendWriteRequest(dataUnit, 0x02);
+
+}
+void MyModbus::on_switch6(bool checked)
+{
+    int v = checked;
+    QModbusDataUnit dataUnit(QModbusDataUnit::HoldingRegisters, 0x0005, 1);
+    QVector<quint16> values;
+    values.append(v);
+    dataUnit.setValues(values);
+    modbusManager->sendWriteRequest(dataUnit, 0x02);
+
+}
+void MyModbus::on_switch7(bool checked)
+{
+    int v = checked;
+    QModbusDataUnit dataUnit(QModbusDataUnit::HoldingRegisters, 0x0006, 1);
+    QVector<quint16> values;
+    values.append(v);
+    dataUnit.setValues(values);
+    modbusManager->sendWriteRequest(dataUnit, 0x02);
+}
+void MyModbus::on_switch8(bool checked)
+{
+    int v = checked;
+    QModbusDataUnit dataUnit(QModbusDataUnit::HoldingRegisters, 0x0007, 1);
+    QVector<quint16> values;
+    values.append(v);
+    dataUnit.setValues(values);
+    modbusManager->sendWriteRequest(dataUnit, 0x02);
 }
 
 void MyModbus::on_pushButton_clicked()
@@ -280,115 +394,6 @@ void MyModbus::on_btnToSet_clicked(){
     emit goToSetPage();
 }
 
-void MyModbus::on_btnControlDevice1_open()
-{
-    QProcess *mp = new QProcess(this);
-    mp->start("/home/pchrl/myLoongson/gpio_out", QStringList() << "53" << "1");
-    // 在销毁 QProcess 对象之前，等待子进程完成
-    if(mp->state() == QProcess::Running) {
-        mp->terminate();  // 终止子进程执行
-        mp->waitForFinished();  // 等待子进程完成
-        if (mp->state() == QProcess::Running) {
-            mp->kill();  // 如果进程没有响应 terminate，使用 kill
-        }
-    }
-    mp->deleteLater();
-}
-void MyModbus::on_btnControlDevice1_close()
-{
-    QProcess *mp = new QProcess(this);
-    mp->start("/home/pchrl/myLoongson/gpio_out", QStringList() << "53" << "0");
-    // 在销毁 QProcess 对象之前，等待子进程完成
-    if(mp->state() == QProcess::Running) {
-        mp->terminate();  // 终止子进程执行
-        mp->waitForFinished();  // 等待子进程完成
-        if (mp->state() == QProcess::Running) {
-            mp->kill();  // 如果进程没有响应 terminate，使用 kill
-        }
-    }
-    mp->deleteLater();
-}
-void MyModbus::on_btnControlDevice2_open()
-{
-    QProcess *mp = new QProcess(this);
-    mp->start("/home/pchrl/myLoongson/gpio_out", QStringList() << "54" << "1");
-    // 在销毁 QProcess 对象之前，等待子进程完成
-    if(mp->state() == QProcess::Running) {
-        mp->terminate();  // 终止子进程执行
-        mp->waitForFinished();  // 等待子进程完成
-        if (mp->state() == QProcess::Running) {
-            mp->kill();  // 如果进程没有响应 terminate，使用 kill
-        }
-    }
-    mp->deleteLater();
-}
-void MyModbus::on_btnControlDevice2_close()
-{
-    QProcess *mp = new QProcess(this);
-    mp->start("/home/pchrl/myLoongson/gpio_out", QStringList() << "54" << "0");
-    // 在销毁 QProcess 对象之前，等待子进程完成
-    if(mp->state() == QProcess::Running) {
-        mp->terminate();  // 终止子进程执行
-        mp->waitForFinished();  // 等待子进程完成
-        if (mp->state() == QProcess::Running) {
-            mp->kill();  // 如果进程没有响应 terminate，使用 kill
-        }
-    }
-    mp->deleteLater();
-}
-void MyModbus::on_btnControlDevice3_open()
-{
-    QProcess *mp = new QProcess(this);
-    mp->start("/home/pchrl/myLoongson/gpio_out", QStringList() << "55" << "1");
-    // 在销毁 QProcess 对象之前，等待子进程完成
-    if(mp->state() == QProcess::Running) {
-        mp->terminate();  // 终止子进程执行
-        mp->waitForFinished();  // 等待子进程完成
-        if (mp->state() == QProcess::Running) {
-            mp->kill();  // 如果进程没有响应 terminate，使用 kill
-        }
-    }
-    mp->deleteLater();
-}
-void MyModbus::on_btnControlDevice3_close()
-{
-    QProcess *mp = new QProcess(this);
-    mp->start("/home/pchrl/myLoongson/gpio_out", QStringList() << "55" << "0");
-    // 在销毁 QProcess 对象之前，等待子进程完成
-    if(mp->state() == QProcess::Running) {
-        mp->terminate();  // 终止子进程执行
-        mp->waitForFinished();  // 等待子进程完成
-        if (mp->state() == QProcess::Running) {
-            mp->kill();  // 如果进程没有响应 terminate，使用 kill
-        }
-    }
-    mp->deleteLater();
-}
-void MyModbus::on_btnControlDevice4_open()
-{
-    QProcess *mp = new QProcess(this);
-    mp->start("/home/pchrl/myLoongson/gpio_out", QStringList() << "56" << "1");
-    // 在销毁 QProcess 对象之前，等待子进程完成
-    if(mp->state() == QProcess::Running) {
-        mp->terminate();  // 终止子进程执行
-        mp->waitForFinished();  // 等待子进程完成
-        if (mp->state() == QProcess::Running) {
-            mp->kill();  // 如果进程没有响应 terminate，使用 kill
-        }
-    }
-    mp->deleteLater();
-}
-void MyModbus::on_btnControlDevice4_close()
-{
-    QProcess *mp = new QProcess(this);
-    mp->start("/home/pchrl/myLoongson/gpio_out", QStringList() << "56" << "0");
-    // 在销毁 QProcess 对象之前，等待子进程完成
-    if(mp->state() == QProcess::Running) {
-        mp->terminate();  // 终止子进程执行
-        mp->waitForFinished();  // 等待子进程完成
-        if (mp->state() == QProcess::Running) {
-            mp->kill();  // 如果进程没有响应 terminate，使用 kill
-        }
-    }
-    mp->deleteLater();
+void MyModbus::on_btnToCan_clicked(){
+    emit goToCan();
 }

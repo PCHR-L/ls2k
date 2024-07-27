@@ -10,6 +10,9 @@
 #include <QProcess>
 #include "SaveImageThread.h"
 
+#include <QUrl>
+#include <QString>
+
 class Camera : public QWidget
 {
     Q_OBJECT
@@ -17,6 +20,9 @@ class Camera : public QWidget
 public:
     Camera(QWidget *parent = nullptr);
     ~Camera();
+
+    QString imageUrl = 0;
+
 private slots:
     void updateImage(const QImage &image);
     void on_btnGoBack_clicked();
@@ -34,10 +40,12 @@ private:
     QPushButton *btnClearCapture;       //清除抓拍的图片
     QTimer *m_timer;
     SaveImageThread *saveImageThread;
+    QString generateImageUrl(const QString &filePath);
 
 signals:
     void returnFirstPage();
     void sendGPIOValue(int value);
+    void imageUrlSend(QString abc);
 };
 
 

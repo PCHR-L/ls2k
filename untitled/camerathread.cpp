@@ -133,6 +133,7 @@ cv::Mat CameraThread::QImage2cvMat(QImage image)
 
 QImage CameraThread::getCurrentFrame()
 {
+    QMutexLocker locker(&m_mutex); // 使用互斥锁保护临界区
     QImage frameCopy = currentFrame.copy(); // 创建当前帧的副本
     return frameCopy;
 }

@@ -9,6 +9,8 @@
 #include "tempHumMonitor.h"
 #include "mqttclient.h"
 #include "datasend.h"
+#include "httpserver.h"
+#include "myCan.h"
 
 class MainWindow : public QMainWindow
 {
@@ -23,11 +25,15 @@ public:
     Camera *mycamera;
     TemperatureHumidityMonitor *thw;
     DataSender *datasend;
-    static void topic1_handler(void* client, message_data_t* msg);
+    HttpServer *server;
+    MyCan *mycan;
 
+    static void fortest_handler(void* client, message_data_t* msg);
+//    static void fasong_handler(void* client, message_data_t* msg);
 private slots:
     void handleGoToCameraPage();
     void handleGoToSetpage();
     void handleReturnFirstPage();
+    void handleGoToCan();
 };
 #endif // MAINWINDOW_H

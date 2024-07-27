@@ -4,6 +4,8 @@
 #include <QThread>
 #include <QImage>
 #include <QString>
+#include <QMutex>
+#include <QMutexLocker>
 
 class SaveImageThread : public QThread
 {
@@ -21,6 +23,8 @@ protected:
 private:
     QImage imageToSave;
     QString fileToSave;
+
+    QMutex m_mutex; // 添加互斥锁
 };
 
 

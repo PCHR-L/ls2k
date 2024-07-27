@@ -4,7 +4,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),mytimer(new QTimer(this))
 {
-
+    this->resize(1024,200);
     mqtt_client_t *client = NULL;
     mqtt_log_init();        //应该用于初始化MQTT客户端的日志系统
     client = mqtt_lease();  //申请一个MQTT客户端
@@ -16,28 +16,40 @@ MainWindow::MainWindow(QWidget *parent)
     mqtt_set_clean_session(client, 1);                                          //设置在断开连接后清除会话
     if(!mqtt_connect(client))
         qDebug() << "连接服务器成功";                                                       //与服务器建立连接，有返回值
-    if(!mqtt_subscribe(client, "fortest", QOS0, topic1_handler))
-        qDebug() << "主题订阅成功";                       //订阅主题，参数：主题名字、服务质量、指定当收到主题数据时的处理函数。
+    if(!mqtt_subscribe(client, "fortest", QOS0, fortest_handler))
+        qDebug() << "fortest主题订阅成功";                       //订阅主题，参数：主题名字、服务质量、指定当收到主题数据时的处理函数。
+/*    if(!mqtt_subscribe(client, "fasong", QOS0, fasong_handler))
+        qDebug() << "fasong主题订阅成功";    */                   //订阅主题，参数：主题名字、服务质量、指定当收到主题数据时的处理函数。
 
     stackedWidget = new QStackedWidget(this);
     mymodbus = new MyModbus(this);
     mycamera = new Camera(this);
     thw = new TemperatureHumidityMonitor(mymodbus,this);
+    mycan = new MyCan();
+
     datasend = new DataSender(this,mymodbus,client,"fortest");
     datasend->setParameters(mymodbus->temperature,mymodbus->humidity);
+
+    server = new HttpServer();
+    server->setParameters(mymodbus->temperature, mymodbus->humidity);
+
     stackedWidget->addWidget(mymodbus);
     stackedWidget->addWidget(mycamera);
     stackedWidget->addWidget(thw);
+    stackedWidget->addWidget(mycan);
     stackedWidget->setCurrentIndex(0);
     setCentralWidget(stackedWidget); // 将stackedWidget设置为中央部件
+
     mytimer->start(10000);
 
     connect(mymodbus, &MyModbus::goToCameraPage, this, &MainWindow::handleGoToCameraPage);
     connect(mymodbus,&MyModbus::goToSetPage,this,&MainWindow::handleGoToSetpage);
+    connect(mymodbus,&MyModbus::goToCan,this,&MainWindow::handleGoToCan);
     connect(mytimer,&QTimer::timeout,datasend,&DataSender::mqttPublishJson);
     connect(mycamera, &Camera::returnFirstPage, this, &MainWindow::handleReturnFirstPage);
+    connect(mycamera,&Camera::imageUrlSend,datasend,&DataSender::publisuImage);
     connect(thw, &TemperatureHumidityMonitor::returnFirstPage, this, &MainWindow::handleReturnFirstPage);
-
+    connect(mycan,&MyCan::returnFirstPage,this,&MainWindow::handleReturnFirstPage);
 }
 
 MainWindow::~MainWindow()
@@ -56,8 +68,12 @@ void MainWindow::handleGoToSetpage(){
     stackedWidget->setCurrentIndex(2);
 }
 
+void MainWindow::handleGoToCan(){
+    stackedWidget->setCurrentIndex(3);
+}
 
-void MainWindow::topic1_handler(void* client, message_data_t* msg)
+
+void MainWindow::fortest_handler(void* client, message_data_t* msg)
 {
     (void) client;
     MQTT_LOG_I("-----------------------------------------------------------------------------------");

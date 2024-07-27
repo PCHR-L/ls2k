@@ -14,11 +14,6 @@ Camera::Camera(QWidget *parent)
     btnGoBack = new QPushButton("返回",this);
     btnCapture = new QPushButton("抓拍", this);
     btnClearCapture = new QPushButton("清除照片", this);
-
-    btnCapture->resize(100, 40);
-    btnClearCapture->resize(100, 40);
-    btnGoBack->resize(100, 40);
-
     cameraThread = new CameraThread(this);
 
     frameLabel = new QLabel(this);
@@ -42,14 +37,11 @@ Camera::Camera(QWidget *parent)
 
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->addStretch(1);
     layout->addWidget(btnCapture);
     layout->addWidget(btnClearCapture);
     layout->addWidget(btnGoBack);
-    layout->addStretch(1);
 
     gridLayout->addLayout(layout,1,0);
-    gridLayout->setSpacing(10);
     setLayout(gridLayout); // 应用栅格布局
     connect(btnGoBack,&QPushButton::clicked,this,&Camera::on_btnGoBack_clicked);
     connect(cameraThread, &CameraThread::frameCaptured, this, &Camera::updateImage);
@@ -96,6 +88,8 @@ void Camera::captureImage2(int value) {
         capturedImageLabel->setPixmap(QPixmap::fromImage(currentFrame));
         QString filePath = "/home/pchrl/capture/capture_" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss") +".png"; // 替换为实际的文件路径
         saveImageThread->saveImage(currentFrame, filePath);
+        imageUrl = generateImageUrl(filePath);
+        emit imageUrlSend(imageUrl);
     }
 }
 
@@ -132,4 +126,8 @@ void Camera::timeOutToExecute()
     emit sendGPIOValue(value.toInt());
 }
 
-
+QString Camera::generateImageUrl(const QString &filePath) {
+    // 如果是本地文件，直接使用file://协议
+    QUrl url = QUrl::fromLocalFile(filePath);
+    return url.toString();
+}

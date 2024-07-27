@@ -20,8 +20,11 @@ SOURCES += \
     camera.cpp \
     camerathread.cpp \
     datasend.cpp \
+    httpserver.cpp \
     main.cpp \
     mainwindow.cpp \
+    myCan.cpp \
+    my_switch.cpp \
     mymodbus.cpp \
     tempHumMonitor.cpp \
     v4l2_c-master/v4l2.c
@@ -31,7 +34,10 @@ HEADERS += \
     camera.h \
     camerathread.h \
     datasend.h \
+    httpserver.h \
     mainwindow.h \
+    myCan.h \
+    my_switch.h \
     mymodbus.h \
     tempHumMonitor.h \
     v4l2_c-master/v4l2.h
@@ -63,3 +69,6 @@ INCLUDEPATH += $$PWD/../../../../../usr/lib/libmqttclient/include/network
 INCLUDEPATH += $$PWD/../../../../../usr/lib/libmqttclient/include/platform/linux
 INCLUDEPATH += $$PWD/../../../../../usr/lib/libmqttclient/include/mqttclient
 DEPENDPATH += $$PWD/../../../../../usr/lib/libmqttclient/include
+
+DISTFILES += \
+    index.html

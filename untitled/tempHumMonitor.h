@@ -9,10 +9,6 @@
 #include <QMessageBox>
 #include "mymodbus.h"
 
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-
 class TemperatureHumidityMonitor : public QWidget
 {
     Q_OBJECT
@@ -47,7 +43,6 @@ private:
     void alert(const QString &message);
     void no_alarm();
     void alarm();
-    void analysisJson();
 
 signals:
     void returnFirstPage();

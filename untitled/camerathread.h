@@ -8,6 +8,9 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/objdetect/objdetect.hpp>
+#include <QMutex>
+#include <QMutexLocker>
+
 
 extern "C"{
 #include "v4l2_c-master/v4l2.h"
@@ -38,6 +41,8 @@ protected:
 private:
     cv::Mat QImage2cvMat(QImage image);         //QImage转换为Mat
     QImage cvMat2QImage(const cv::Mat& mat);    //Mat转换为QImage
+
+    QMutex m_mutex; // 添加互斥锁
 
 };
 

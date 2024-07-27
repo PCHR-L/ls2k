@@ -27,26 +27,28 @@ void TemperatureHumidityMonitor::initUI(MyModbus *modbus)
     QLabel *labelHumidityMin = new QLabel("湿度最小值：", this);
 
     editTemperatureMaxThreshold = new QLineEdit(this);
-    editTemperatureMaxThreshold->resize(120,60);
     editTemperatureMinThreshold = new QLineEdit(this);
-    editTemperatureMinThreshold->resize(120,60);
     editHumidityMaxThreshold = new QLineEdit(this);
-    editHumidityMaxThreshold->resize(120,60);
     editHumidityMinThreshold = new QLineEdit(this);
-    editHumidityMinThreshold->resize(120,60);
 
-    QFormLayout *thresholdLayout = new QFormLayout;
-    thresholdLayout->addRow(labelTemperatureMax, editTemperatureMaxThreshold);
-    thresholdLayout->addRow(labelTemperatureMin, editTemperatureMinThreshold);
-    thresholdLayout->addRow(labelHumidityMax, editHumidityMaxThreshold);
-    thresholdLayout->addRow(labelHumidityMin, editHumidityMinThreshold);
 
     labelTemperature = new QLabel("温度: --°C", this);
-    labelTemperature->resize(120,120);
     labelHumidity = new QLabel("湿度: --%", this);
-    labelHumidity->resize(120,120);
 
-    // 水平布局来排列按钮
+    QHBoxLayout *templayout = new QHBoxLayout;
+    QHBoxLayout *humlayout = new QHBoxLayout;
+    templayout->addWidget(labelTemperature);
+    templayout->addWidget(labelTemperatureMax);
+    templayout->addWidget(editTemperatureMaxThreshold);
+    templayout->addWidget(labelTemperatureMin);
+    templayout->addWidget(editTemperatureMinThreshold);
+    humlayout->addWidget(labelHumidity);
+    humlayout->addWidget(labelHumidityMax);
+    humlayout->addWidget(editHumidityMaxThreshold);
+    humlayout->addWidget(labelHumidityMin);
+    humlayout->addWidget(editHumidityMinThreshold);
+
+    // 水平布局来排列按钮30000
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     btnSetThresholds = new QPushButton("设置报警阈值", this);
     btnControlExternalModule = new QPushButton("关闭报警", this);
@@ -56,16 +58,15 @@ void TemperatureHumidityMonitor::initUI(MyModbus *modbus)
     buttonLayout->addWidget(btnControlExternalModule);
     buttonLayout->addStretch(1); // 在按钮之间添加空间
     buttonLayout->addWidget(returnFirst);
-    buttonLayout->addStretch(1);
 
     // 使用垂直布局来组合所有控件
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->addWidget(labelTemperature);
-    mainLayout->addWidget(labelHumidity);
+    mainLayout->addLayout(templayout);
+    mainLayout->addLayout(humlayout);
     mainLayout->addStretch(1); // 在控件之间添加空间
-    mainLayout->addLayout(thresholdLayout);
     mainLayout->addLayout(buttonLayout); // 添加按钮布局
     mainLayout->addStretch(1); // 在底部添加空间
+
     setLayout(mainLayout); // 应用主布局
 
     // 设置输入验证器

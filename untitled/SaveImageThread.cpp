@@ -11,6 +11,7 @@ SaveImageThread::~SaveImageThread()
 
 void SaveImageThread::saveImage(const QImage &image, const QString &filePath)
 {
+    QMutexLocker locker(&m_mutex); // 使用互斥锁保护临界区
     imageToSave = image;
     fileToSave = filePath;
 
@@ -23,6 +24,8 @@ void SaveImageThread::run()
         bool success = imageToSave.save(fileToSave,"PNG");
         if (!success) {
             qDebug() << "Failed to save image to" << fileToSave;
+        }else{
+
         }
     }
 }
